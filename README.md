@@ -64,6 +64,7 @@ torch_device_dtype_benchmark
 ├── tests             # for storing test scripts
 ├── visualizations    # for storing visualization files
 ├── README.md         # README file
+├── requirements.txt  # pip requirements
 └── run.sh            # shell script to run the project
 ```
 
