@@ -55,7 +55,7 @@ Replace `<device>` with the desired computational device (e.g., "CPU", "CUDA 0")
 
 ## Folder Structure
 ```
-workspace
+torch_device_dtype_benchmark
 ├── data              # for storing datasets or data files
 ├── docs              # for storing documentation
 ├── src               # for storing source code
