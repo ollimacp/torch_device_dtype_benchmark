@@ -1,0 +1,10 @@
+
+Replace `<device>` with the desired computational device (CPU, CUDA 0, CUDA 1, CUDA 2) and `<dtype>` with the desired data type (float16, float32).
+
+## Contributing
+
+Contributions are welcome! Please follow the guidelines in the [CONTRIBUTING.md](CONTRIBUTING.md) file.
+
+## License
+
+This project is licensed under the [MIT License](LICENSE).

@@ -1,0 +1,18 @@
+# benchmark.py
+
+import argparse
+from benchmark_tasks import BenchmarkTasks
+
+def main():
+    parser = argparse.ArgumentParser(description="Neural Network Benchmarking Suite")
+    parser.add_argument("--device", choices=["CPU", "CUDA 0", "CUDA 1", "CUDA 2"], default="CPU", help="Computational device")
+    parser.add_argument("--dtype", choices=["float16", "float32"], default="float32", help="Data type")
+    args = parser.parse_args()
+
+    benchmark = BenchmarkTasks(args.device, args.dtype)
+    benchmark.binary_classification()
+    benchmark.display_scoreboard()
+    benchmark.visualize_scoreboard()
+
+if __name__ == "__main__":
+    main()

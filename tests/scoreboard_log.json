@@ -1,0 +1,30 @@
+[
+    {
+        "Task": "Binary Classification",
+        "Device": "cuda:0",
+        "Number of Parameters": 271,
+        "Final Loss": 0.44020673632621765,
+        "Time": 0.8182766437530518
+    },
+    {
+        "Task": "Binary Classification",
+        "Device": "cuda:0",
+        "Number of Parameters": 271,
+        "Final Loss": 0.45916783809661865,
+        "Time": 0.8162140846252441
+    },
+    {
+        "Task": "Binary Classification",
+        "Device": "cuda:0",
+        "Number of Parameters": 271,
+        "Final Loss": 0.37775668501853943,
+        "Time": 0.8036439418792725
+    },
+    {
+        "Task": "Binary Classification",
+        "Device": "cuda:0",
+        "Number of Parameters": 271,
+        "Final Loss": 0.3248959183692932,
+        "Time": 0.7893204689025879
+    }
+]

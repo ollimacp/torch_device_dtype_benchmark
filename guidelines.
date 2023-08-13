@@ -1,0 +1,13 @@
+# Neural Network Benchmarking Suite
+
+This project is a Python-based benchmarking suite for neural networks. It allows for the selection of computational devices, choice of data types, and includes various benchmarking tasks.
+
+## Installation
+
+1. Clone the repository.
+2. Install the required packages using `pip install -r requirements.txt`.
+
+## Usage
+
+Run the benchmarking suite using the following command:
+
