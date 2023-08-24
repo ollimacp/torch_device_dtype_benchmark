@@ -9,6 +9,8 @@ import json
 import os
 import pprint
 from benchmark_tasks import BenchmarkTasks
+#from benchmark_tasks import ExtendedBenchmarkTasks  # Import the extended class
+
 
 dtype_mapping = {
     'float32': torch.float32, 'float': torch.float, 'float64': torch.float64, 'double': torch.double,
@@ -43,6 +45,28 @@ def load_scoreboard(file_path):
 def save_scoreboard(scoreboard, file_path):
     with open(file_path, 'w') as file:
         json.dump(scoreboard, file, indent=4)
+    print(f"Scoreboard saved to {file_path}")
+
+
+
+
+
+def get_benchmark_methods(obj):
+    """Get all callable methods of an object excluding unwanted methods."""
+    # List of methods that aren't benchmarks but are callable
+    excluded_methods = ['display_scoreboard', 'Getstate', '__get_state__', '__init_subclass__','Init Subclass', 'compute_hidden_neurons', 'benchmark', 'efficiency_score', 'generate_dynamic_nn', 'DynamicNN', '', '']
+    
+    methods = [method for method in dir(obj) 
+               if callable(getattr(obj, method)) and 
+               not method.startswith("__") and 
+               method not in excluded_methods]
+    return methods
+
+
+
+
+
+
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Benchmark a Neural Network')
@@ -72,61 +96,70 @@ if __name__ == '__main__':
 
 
     tasks = BenchmarkTasks(device, dtype, scoreboard_log)
+    #tasks = ExtendedBenchmarkTasks(device, dtype, scoreboard_log)  # Use the extended class
 
     tasks.scoreboard = scoreboard_log
 
+    MAX_ITERATIONS = 10  # Set a maximum number of iterations for the loop
 
-    while True:
-
+    for iteration in range(1, MAX_ITERATIONS + 1):
+        
+        print(f"\n=== Iteration {iteration}/{MAX_ITERATIONS} ===\n")
+        
+        methods = get_benchmark_methods(tasks)
+        
         print("Choose the task to execute:")
-        print("1. Binary Classification")
-        print("2. All Tasks")
+        for idx, method in enumerate(methods, 1):
+            print(f"{idx}. {method.replace('_', ' ').title()}")  # Convert method name to a readable format
+        print(f"{len(methods) + 1}. All Tasks")
+        
         choice = int(input("Enter the task number: "))
 
-        #args.device , args.dtype = prompt_for_parameters()
-
-        # Update the device and dtype in tasks if changed
+        # Update the device and dtype in tasks
         device = torch.device(args.device)
         dtype = dtype_mapping[args.dtype]
 
-
-        if choice == 1:
-            tasks = tasks.binary_classification()
-        elif choice == 2:
-            for func_name in dir(tasks):
-                if not func_name.startswith("__"):
-                    func = getattr(tasks, func_name)
-                    if callable(func) and func_name not in ['display_scoreboard', 'visualize_scoreboard']:
-                        func()
-
-
-   
-
-        # Create a copy of the scoreboard for pretty printing
+        if 1 <= choice <= len(methods):
+            func = getattr(tasks, methods[choice - 1])
+            func()
+        elif choice == len(methods) + 1:  # All tasks
+            for method in methods:
+                func = getattr(tasks, method)
+                func()
+        else:
+            print("Invalid choice! Please choose a valid task number.")
+            continue  # Skip the rest of this iteration and prompt again
+        
+        # Display the scoreboard
         pretty_scoreboard = [dict(item) for item in tasks.scoreboard]  # Deep copy
         for item in pretty_scoreboard:
             item['Final Loss'] = round(item['Final Loss'], 3)
             item['Time'] = f"{round(float(item['Time']), 3)} seconds"  # Ensure 'Time' is treated as a float
         pprint.pprint(pretty_scoreboard)
 
-        # Prompt to rerun
-        rerun = input("Do you want to rerun the benchmark? (yes/no/delete): ")
-        if rerun.lower() == 'yes':
-            device, dtype = prompt_for_parameters(device, dtype) # Notice that I'm passing device and dtype, not args.device and args.dtype
-            tasks.device = device
-            tasks.dtype = dtype
-            pass
-        elif rerun.lower() == 'no':
-            break
-        elif rerun.lower() == "delete":
-            tasks.scoreboard =[]
-            break
-        else:
-            print(f"Please provide valid input!")
-            continue
 
-        # Save the updated scoreboard_log
+        # Save the updated scoreboard_log at the end of each iteration
         save_scoreboard(tasks.scoreboard, log_file_path)
 
-        # Reset tasks for new run
+        # Prompt to rerun or change settings
+        rerun = input("Do you want to rerun the benchmark? (YES/no/change/delete): ")
+        
+        if rerun.lower() == 'yes':
+            continue
+        elif rerun.lower() == 'no':
+            break
+        elif rerun.lower() == "change":
+            device, dtype = prompt_for_parameters(device, dtype) # Update device and dtype
+            args.device = str(device)  # Update the args values too
+            args.dtype = str(dtype)
+        elif rerun.lower() == "delete":
+            tasks.scoreboard = []
+            save_scoreboard(tasks.scoreboard, log_file_path)
+        else:
+            print(f"Please provide valid input!")
+            continue  # Skip the rest of this iteration and prompt again
+
+
+
+        # Reset tasks for next run
         tasks = BenchmarkTasks(device, dtype, tasks.scoreboard)
