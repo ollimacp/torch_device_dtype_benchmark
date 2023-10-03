@@ -72,9 +72,7 @@ torch_device_dtype_benchmark
 Contributions are welcome! Please follow the guidelines in the [CONTRIBUTING.md](CONTRIBUTING.md) file.
 
 ## License
-This project is licensed under the [MIT License](LICENSE). See the LICENSE file for details.
+This project is licensed under the [MIT License](LICENSE).
 ```
-TODO
-Make sure to update `<repository_url>` with the actual URL of your repository.
 
 
